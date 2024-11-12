@@ -24,7 +24,19 @@ public abstract class VirtualSubsystem {
       name = this.getClass().getSimpleName();
       name = name.substring(name.lastIndexOf('.') + 1);
     }
-    this.name = name;
+
+    int counter = 1;
+    while(true) {
+      String potentialName = name + (counter == 1 ? "" : counter);
+      boolean nameExists = subsystems.stream()
+                                     .anyMatch(subsystem -> subsystem.getName().equals(potentialName));
+
+      if (!nameExists) {
+          this.name = potentialName;
+          break; // Return as soon as a unique name is found
+      }
+      counter++;
+    }
   }
 
   /** Calls {@link #periodic()} on all virtual subsystems. */

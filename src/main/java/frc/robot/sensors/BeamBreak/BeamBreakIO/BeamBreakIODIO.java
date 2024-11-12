@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class BeamBreakIODIO implements BeamBreakIO {
   private DigitalInput beamBreakDigitalInput;
-  private BeamBreakIOInputs inputs = new BeamBreakIOInputs();
 
   public BeamBreakIODIO(int beamBreakDIOID) {
     beamBreakDigitalInput = new DigitalInput(beamBreakDIOID);
