@@ -3,6 +3,8 @@ package frc.lib;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.littletonrobotics.junction.Logger;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +30,9 @@ public abstract class VirtualSubsystem {
   /** Calls {@link #periodic()} on all virtual subsystems. */
   public static void periodicAll() {
     for (var subsystem : subsystems) {
+      double timestamp = RobotTime.getTimestampSeconds();
       subsystem.periodic();
+      Logger.recordOutput(subsystem.getName() + "/latencyPeriodicSec", RobotTime.getTimestampSeconds() - timestamp);
     }
   }
 
