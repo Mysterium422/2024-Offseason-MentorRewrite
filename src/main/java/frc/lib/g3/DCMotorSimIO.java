@@ -8,12 +8,10 @@ import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import lombok.Getter;
 
-public class DCMotorSimIO extends DCMotorSim implements LoggableInputs {
-    @Getter private DCMotorSimIOInputsAutoLogged inputs = new DCMotorSimIOInputsAutoLogged();
-
+public class DCMotorSimIO extends DCMotorSim {
     public DCMotorSimIO(LinearSystem<N2, N1, N2> plant, DCMotor gearbox, double... measurementStdDevs) {
         super(plant, gearbox, measurementStdDevs);
     }
@@ -22,19 +20,11 @@ public class DCMotorSimIO extends DCMotorSim implements LoggableInputs {
         this(LinearSystemId.createDCMotorSystem(gearbox, gearing, jKgMetersSquared), gearbox, measurementStdDevs);
     }
 
-    public void updateInputs() {
+    public void updateInputs(MotorIOInputsAutoLogged inputs) {
+        inputs.outputVoltage = getInputVoltage();
+        inputs.output = inputs.outputVoltage / RobotController.getBatteryVoltage();
         inputs.currentAmps = getCurrentDrawAmps();
         inputs.velocityRPM = getAngularVelocityRPM();
         inputs.isOn = Math.abs(inputs.velocityRPM) > 0.01;
-    }
-
-    @Override
-    public void toLog(LogTable table) {
-        inputs.toLog(table);
-    }
-
-    @Override
-    public void fromLog(LogTable table) {
-        inputs.fromLog(table);
     }
 }

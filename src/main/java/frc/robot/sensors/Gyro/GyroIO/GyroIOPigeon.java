@@ -8,6 +8,10 @@ public class GyroIOPigeon implements GyroIO {
 
     private final Pigeon2 m_pigeon;
 
+    public GyroIOPigeon(int deviceId, String canbus) {
+        this(new Pigeon2(deviceId, canbus));
+    }
+
     public GyroIOPigeon(Pigeon2 pigeon) {
         m_pigeon = pigeon;
     }

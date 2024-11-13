@@ -1,5 +1,7 @@
 package frc.robot.sensors.Limelight;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Timer;
@@ -23,6 +25,10 @@ public class LimelightIntake extends VirtualSubsystem {
             lastKnownTx = tx;
             lastKnownTxTime = Timer.getFPGATimestamp();
         }
+        
+        Logger.recordOutput(getName() + "/isValidTarget", isValidTarget());
+        Logger.recordOutput(getName() + "/horizontalOffset", getHorizontalOffset());
+        Logger.recordOutput(getName() + "/lastDetectionTime", lastKnownTxTime);
     }
 
     public boolean isValidTarget() {
