@@ -6,24 +6,24 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DoublePressTracker;
 
 public class CommandXboxControllerOI extends CommandXboxController {
-    public double currentRumbleValue;
+  public double currentRumbleValue;
 
-    public CommandXboxControllerOI(int port) {
-        super(port);
-    }
+  public CommandXboxControllerOI(int port) {
+    super(port);
+  }
 
-    public void setRumble(RumbleType rumbleType, double value) {
-        if (currentRumbleValue != value) {
-            super.setRumble(rumbleType, value);
-            currentRumbleValue = value;
-        }
+  public void setRumble(RumbleType rumbleType, double value) {
+    if (currentRumbleValue != value) {
+      super.setRumble(rumbleType, value);
+      currentRumbleValue = value;
     }
+  }
 
-    public Trigger doublePress(Trigger base) {
-        return DoublePressTracker.doublePress(base);
-    }
+  public Trigger doublePress(Trigger base) {
+    return DoublePressTracker.doublePress(base);
+  }
 
-    public Trigger holdPress(Trigger base) {
-        return base.debounce(1);
-    }
+  public Trigger holdPress(Trigger base) {
+    return base.debounce(1);
+  }
 }

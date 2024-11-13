@@ -1,11 +1,10 @@
 package frc.robot.sensors.BeamBreak;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj.Timer;
 import frc.lib.VirtualSubsystem;
 import frc.robot.sensors.BeamBreak.BeamBreakIO.BeamBreakIO;
 import frc.robot.sensors.BeamBreak.BeamBreakIO.BeamBreakIOInputsAutoLogged;
+import org.littletonrobotics.junction.Logger;
 
 public class BeamBreak extends VirtualSubsystem {
   private BeamBreakIO beamBreakIO;
@@ -40,7 +39,7 @@ public class BeamBreak extends VirtualSubsystem {
     } else if (!inputs.isBroken) {
       brokenLastCycle = false;
     }
-    
+
     Logger.recordOutput(getName() + "/brokenTwice", isBroken());
     Logger.recordOutput(getName() + "/brokenTime", getBrokenTime());
   }

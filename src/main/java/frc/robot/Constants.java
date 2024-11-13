@@ -1,28 +1,23 @@
 package frc.robot;
 
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.units.LinearVelocityUnit;
-import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.LinearVelocity;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.lib.LoggedTunableNumber;
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
 public final class Constants {
 
-    public static final double JOYSTICK_THRESHOLD = 0.1;
-    public static final double CONTROL_LIMITER = 1;
-	public static final double THEORETICAL_RESTING_VOLTAGE = 12;
-    public static final double RUMBLE_DURATION = 1;
+  public static final double JOYSTICK_THRESHOLD = 0.1;
+  public static final double CONTROL_LIMITER = 1;
+  public static final double THEORETICAL_RESTING_VOLTAGE = 12;
+  public static final double RUMBLE_DURATION = 1;
 
   public static enum Mode {
     REAL,
@@ -32,20 +27,26 @@ public final class Constants {
 
   public static Mode getMode() {
     if (RobotBase.isReal()) {
-        return Mode.REAL;
+      return Mode.REAL;
+    } else if (enableReplay) {
+      return Mode.REPLAY;
     } else {
-        return Mode.SIM;
+      return Mode.SIM;
     }
   }
 
   public static final boolean tuningMode = true;
+  public static final boolean enableReplay = false;
 
   public static final class AutonConstants {
-    public static LoggedDashboardNumber AUTON_SHOOT_SUBWOOFER_LENGTH_SEC = new LoggedDashboardNumber("Auton/Constants/AUTON_SHOOT_SUBWOOFER_LENGTH_SEC", 1.0);
-    public static LoggedDashboardNumber AUTON_SHOOT_SUBWOOFER_REV_LENGTH_SEC = new LoggedDashboardNumber("Auton/Constants/AUTON_SHOOT_SUBWOOFER_REV_LENGTH_SEC", 1.0);
-    public static LoggedDashboardNumber AUTON_SHOOT_AUTO_AIM_LENGTH_SEC = new LoggedDashboardNumber("Auton/Constants/AUTON_SHOOT_AUTO_AIM_LENGTH_SEC", 1.0);
-    public static LoggedDashboardNumber AUTO_AIM_TOLERANCE = new LoggedDashboardNumber("Auton/Constants/AUTO_AIM_TOLERANCE", 10.0);
-
+    public static LoggedDashboardNumber AUTON_SHOOT_SUBWOOFER_LENGTH_SEC =
+        new LoggedDashboardNumber("Auton/Constants/AUTON_SHOOT_SUBWOOFER_LENGTH_SEC", 1.0);
+    public static LoggedDashboardNumber AUTON_SHOOT_SUBWOOFER_REV_LENGTH_SEC =
+        new LoggedDashboardNumber("Auton/Constants/AUTON_SHOOT_SUBWOOFER_REV_LENGTH_SEC", 1.0);
+    public static LoggedDashboardNumber AUTON_SHOOT_AUTO_AIM_LENGTH_SEC =
+        new LoggedDashboardNumber("Auton/Constants/AUTON_SHOOT_AUTO_AIM_LENGTH_SEC", 1.0);
+    public static LoggedDashboardNumber AUTO_AIM_TOLERANCE =
+        new LoggedDashboardNumber("Auton/Constants/AUTO_AIM_TOLERANCE", 10.0);
   }
 
   public static final LoggedDashboardNumber deadzone =
@@ -61,8 +62,11 @@ public final class Constants {
     public static LoggedDashboardNumber CONTROLLER_RUMBLE_TIME =
         new LoggedDashboardNumber("Intake/Constants/CONTROLLER_RUMBLE_TIME", 12);
 
-		public static double MOI = 0.00005; // TODO: Actually figure out what the MOI (an hour of erik explaing something to you that somehow ends with a vector)
-		public static double GEARING = 5.26; // TODO: Figure this out too (should be on the side of the gearbox)
+    public static double MOI =
+        0.00005; // TODO: Actually figure out what the MOI (an hour of erik explaing something to
+    // you that somehow ends with a vector)
+    public static double GEARING =
+        5.26; // TODO: Figure this out too (should be on the side of the gearbox)
   }
 
   public static final class MotorConstants {
@@ -114,27 +118,38 @@ public final class Constants {
     public static LoggedDashboardNumber MAX_PIVOT_ANGLE =
         new LoggedDashboardNumber("Shooter/Constants/MAX_PIVOT_ANGLE", 1.12);
 
-    public static LoggedTunableNumber ALIGN_ZERO_P = new LoggedTunableNumber("Shooter/Constants/ALIGN_ZERO_P", 0.01);
-    
-    public static LoggedDashboardNumber PIVOT_ANGLE_TOLERANCE = new LoggedDashboardNumber("Shooter/Constants/PIVOT_ANGLE_TOLERANCE", 0.02);
-    public static LoggedDashboardNumber AMP_SPEED_TOLERANCE = new LoggedDashboardNumber("Shooter/Constants/AMP_SPEED_TOLERANCE", 15);
-    public static LoggedDashboardNumber SPEAKER_SPEED_TOLERANCE = new LoggedDashboardNumber("Shooter/Constants/SUBWOOFER_SPEED_TOLERANCE", 50);
+    public static LoggedTunableNumber ALIGN_ZERO_P =
+        new LoggedTunableNumber("Shooter/Constants/ALIGN_ZERO_P", 0.01);
 
-		public static final class Simulation {
-			public static LoggedDashboardNumber FLYWHEEL_GEARING = new LoggedDashboardNumber("Shooter/Constants/Simulation/FLYWHEEL_GEARING", 5.26);
-			public static LoggedDashboardNumber FLYWHEEL_MOI = new LoggedDashboardNumber("Shooter/Constants/Simulation/FLYWHEEL_MOI", .00005);
+    public static LoggedDashboardNumber PIVOT_ANGLE_TOLERANCE =
+        new LoggedDashboardNumber("Shooter/Constants/PIVOT_ANGLE_TOLERANCE", 0.02);
+    public static LoggedDashboardNumber AMP_SPEED_TOLERANCE =
+        new LoggedDashboardNumber("Shooter/Constants/AMP_SPEED_TOLERANCE", 15);
+    public static LoggedDashboardNumber SPEAKER_SPEED_TOLERANCE =
+        new LoggedDashboardNumber("Shooter/Constants/SUBWOOFER_SPEED_TOLERANCE", 50);
 
-			public static LoggedDashboardNumber FEEDER_GEARING = new LoggedDashboardNumber("Shooter/Constants/Simulation/FEEDER_GEARING", 5.26);
-			public static LoggedDashboardNumber FEEDER_MOI = new LoggedDashboardNumber("Shooter/Constants/Simulation/FEEDER_MOI", .00005);
-		}
+    public static final class Simulation {
+      public static LoggedDashboardNumber FLYWHEEL_GEARING =
+          new LoggedDashboardNumber("Shooter/Constants/Simulation/FLYWHEEL_GEARING", 5.26);
+      public static LoggedDashboardNumber FLYWHEEL_MOI =
+          new LoggedDashboardNumber("Shooter/Constants/Simulation/FLYWHEEL_MOI", .00005);
+
+      public static LoggedDashboardNumber FEEDER_GEARING =
+          new LoggedDashboardNumber("Shooter/Constants/Simulation/FEEDER_GEARING", 5.26);
+      public static LoggedDashboardNumber FEEDER_MOI =
+          new LoggedDashboardNumber("Shooter/Constants/Simulation/FEEDER_MOI", .00005);
+    }
   }
 
   public static final class NeoDrivetrainConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final LinearVelocity MAX_SPEED_METERS_PER_SECOND = Units.MetersPerSecond.of(3.00); // SET FOR TESTING
-    public static final LinearVelocity MAX_SPEED_METERS_PER_SECOND_BOOSTED = Units.MetersPerSecond.of(4.95); // NORMAl SPEED (USED TO BE SET TO ABOVE)
-    public static final AngularVelocity MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = Units.RadiansPerSecond.of(10); // (Max 14.58) radians per second
+    public static final LinearVelocity MAX_SPEED_METERS_PER_SECOND =
+        Units.MetersPerSecond.of(3.00); // SET FOR TESTING
+    public static final LinearVelocity MAX_SPEED_METERS_PER_SECOND_BOOSTED =
+        Units.MetersPerSecond.of(4.95); // NORMAl SPEED (USED TO BE SET TO ABOVE)
+    public static final AngularVelocity MAX_ANGULAR_SPEED_RADIANS_PER_SECOND =
+        Units.RadiansPerSecond.of(10); // (Max 14.58) radians per second
 
     public static final double DIRECTION_SLEW_RATE = 1.2; // radians per second
     public static final double MAGNITUDE_SLEW_RATE =

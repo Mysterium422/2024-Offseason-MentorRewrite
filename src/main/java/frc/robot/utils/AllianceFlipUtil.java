@@ -65,7 +65,6 @@ public class AllianceFlipUtil {
   /**
    * Flips a trajectory state to the correct side of the field based on the current alliance color.
    */
-
   public static boolean shouldFlip() {
     return DriverStation.getAlliance().isPresent()
         && DriverStation.getAlliance().get() == Alliance.Red;

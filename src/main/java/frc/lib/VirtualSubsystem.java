@@ -2,11 +2,9 @@ package frc.lib;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.littletonrobotics.junction.Logger;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.littletonrobotics.junction.Logger;
 
 public abstract class VirtualSubsystem {
   private static List<VirtualSubsystem> subsystems = new ArrayList<>();
@@ -26,14 +24,14 @@ public abstract class VirtualSubsystem {
     }
 
     int counter = 1;
-    while(true) {
+    while (true) {
       String potentialName = name + (counter == 1 ? "" : counter);
-      boolean nameExists = subsystems.stream()
-                                     .anyMatch(subsystem -> subsystem.getName().equals(potentialName));
+      boolean nameExists =
+          subsystems.stream().anyMatch(subsystem -> subsystem.getName().equals(potentialName));
 
       if (!nameExists) {
-          this.name = potentialName;
-          break; // Return as soon as a unique name is found
+        this.name = potentialName;
+        break; // Return as soon as a unique name is found
       }
       counter++;
     }
@@ -44,7 +42,8 @@ public abstract class VirtualSubsystem {
     for (var subsystem : subsystems) {
       double timestamp = RobotTime.getTimestampSeconds();
       subsystem.periodic();
-      Logger.recordOutput(subsystem.getName() + "/latencyPeriodicSec", RobotTime.getTimestampSeconds() - timestamp);
+      Logger.recordOutput(
+          subsystem.getName() + "/latencyPeriodicSec", RobotTime.getTimestampSeconds() - timestamp);
     }
   }
 

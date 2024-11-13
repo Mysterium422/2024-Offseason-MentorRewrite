@@ -1,21 +1,18 @@
 package frc.robot.subsystems.Climber.ClimberIO;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import frc.lib.g3.MotorIOInputsAutoLogged;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface ClimberIO {
 
-    @AutoLog
-    public class ClimberIOInputs {
-        public double leftPosition;
-        public double rightPosition;
-        public transient MotorIOInputsAutoLogged left = new MotorIOInputsAutoLogged();
-        public transient MotorIOInputsAutoLogged right = new MotorIOInputsAutoLogged();
-    }
+  @AutoLog
+  public class ClimberIOInputs {
+    public double leftPosition;
+    public double rightPosition;
+  }
 
-    public void setPower(double rightPower, double leftPower);
+  public default void setPower(double rightPower, double leftPower) {}
 
-    public void updateInputs(ClimberIOInputs inputs);
-    
+  public default void updateInputs(
+      ClimberIOInputs inputs, MotorIOInputsAutoLogged left, MotorIOInputsAutoLogged right) {}
 }
