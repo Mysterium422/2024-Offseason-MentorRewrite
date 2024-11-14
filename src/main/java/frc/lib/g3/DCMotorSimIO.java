@@ -6,6 +6,7 @@ import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class DCMotorSimIO extends DCMotorSim {
@@ -23,6 +24,9 @@ public class DCMotorSimIO extends DCMotorSim {
   }
 
   public void updateInputs(MotorIOInputsAutoLogged inputs) {
+    if (RobotState.isDisabled()) {
+      setInputVoltage(0);
+    }
     inputs.outputVoltage = getInputVoltage();
     inputs.output = inputs.outputVoltage / RobotController.getBatteryVoltage();
     inputs.currentAmps = getCurrentDrawAmps();

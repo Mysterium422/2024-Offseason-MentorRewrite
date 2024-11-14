@@ -1,7 +1,10 @@
 package frc.robot.subsystems.Climber;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.RobotTime;
 import frc.lib.g3.MotorIOInputsAutoLogged;
@@ -17,15 +20,16 @@ public class Climber extends SubsystemBase {
   private MotorIOInputsAutoLogged rightInputs = new MotorIOInputsAutoLogged();
   private double leftPowerDesired;
   private double rightPowerDesired;
-  private Mechanism2d viz = new Mechanism2d(4, 10);
+  private Mechanism2d viz = new Mechanism2d(4, 2);
   private MechanismLigament2d vizLeft =
-      viz.getRoot("LeftClimber", 1, 0).append(new MechanismLigament2d("LeftHeight", 0, 0));
+      viz.getRoot("LeftClimber", 1, 0).append(new MechanismLigament2d("LeftHeight", 0, 90));
   private MechanismLigament2d vizRight =
       viz.getRoot("RightClimber", 3, 0).append(new MechanismLigament2d("RightHeight", 0, 0));
 
   public Climber(ClimberIO climberIO) {
     super("Climber");
     this.climberIO = climberIO;
+    viz.getRoot("Max Height", 0, 1).append(new MechanismLigament2d("MaxHeightLine", 4, 0, 2, new Color8Bit(Color.kBlack)));
   }
 
   @Override
@@ -36,8 +40,8 @@ public class Climber extends SubsystemBase {
     Logger.processInputs(getName() + "/left", leftInputs);
     Logger.processInputs(getName() + "/right", rightInputs);
 
-    vizLeft.setLength(inputs.leftPosition / 15);
-    vizRight.setLength(inputs.rightPosition / 15);
+    vizLeft.setLength(MathUtil.clamp(inputs.leftPosition, 0, 1));
+    vizRight.setLength(MathUtil.clamp(inputs.rightPosition, 0, 1));
 
     Logger.recordOutput(getName() + "/leftPowerDesired", leftPowerDesired);
     Logger.recordOutput(getName() + "/rightPowerDesired", rightPowerDesired);

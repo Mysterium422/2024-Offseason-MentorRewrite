@@ -52,7 +52,7 @@ public class OneDriverControlsImpl extends Controls {
 
   @Override
   public Trigger climbUp() {
-    return EmptyTrigger();
+    return driver.a();
   }
 
   @Override

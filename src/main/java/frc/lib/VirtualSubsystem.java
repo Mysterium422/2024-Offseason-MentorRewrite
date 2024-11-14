@@ -17,7 +17,6 @@ public abstract class VirtualSubsystem {
   }
 
   public VirtualSubsystem(String name) {
-    subsystems.add(this);
     if (name == null) {
       name = this.getClass().getSimpleName();
       name = name.substring(name.lastIndexOf('.') + 1);
@@ -35,6 +34,7 @@ public abstract class VirtualSubsystem {
       }
       counter++;
     }
+    subsystems.add(this);
   }
 
   /** Calls {@link #periodic()} on all virtual subsystems. */

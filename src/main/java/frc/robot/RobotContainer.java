@@ -4,12 +4,16 @@
 
 package frc.robot;
 
+import java.sql.Driver;
+import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.Constants.Mode;
+import frc.robot.Ports.ClimberPorts;
 import frc.robot.oi.Controls;
 import frc.robot.oi.OneDriverControlsImpl;
 import frc.robot.oi.TwoDriverControlsImpl;
@@ -19,20 +23,32 @@ import frc.robot.subsystems.Climber.ClimberIO.ClimberIONeo;
 import frc.robot.subsystems.Climber.ClimberIO.ClimberIOSim;
 
 public class RobotContainer {
-  private final Controls m_controls;
+  private Controls m_controls = new OneDriverControlsImpl(0);
   private Climber m_climber;
 
   public RobotContainer() {
-    if (DriverStation.isJoystickConnected(0) && DriverStation.isJoystickConnected(1)) {
-      m_controls = new TwoDriverControlsImpl(0, 1);
-    } else if (DriverStation.isJoystickConnected(1)) {
-      m_controls = new OneDriverControlsImpl(1);
-    } else {
-      m_controls = new OneDriverControlsImpl(0);
-    }
-
+    // refreshControllers();
     m_climber = buildClimber(Constants.getMode());
-    // configureBindings();
+    configureBindings();
+  }
+
+  private void refreshControllers() {
+    ArrayList<Integer> joysticksConnected = new ArrayList<>();
+    for (int i = 0; i < DriverStation.kJoystickPorts; i++) {
+      if (DriverStation.isJoystickConnected(i)) {
+        joysticksConnected.add(i);
+      }
+    }
+    
+    if (joysticksConnected.size() >= 2) {
+      m_controls = new TwoDriverControlsImpl(joysticksConnected.get(0), joysticksConnected.get(1));
+    } else if (joysticksConnected.size() == 1) {
+      DriverStation.reportWarning("[G3] Only one controller connected. Implementing One Driver Controls. (" + joysticksConnected.get(0) + ")", true);
+      m_controls = new OneDriverControlsImpl(joysticksConnected.get(0));
+    } else {
+      DriverStation.reportWarning("[G3] No controllers detected. Implement default controls.", true);
+      m_controls = new TwoDriverControlsImpl(0, 1);
+    }
   }
 
   private void configureBindings() {
@@ -41,7 +57,8 @@ public class RobotContainer {
         new RunCommand(
             () -> {
               m_climber.setPower(m_controls.getClimbLeftOnly(), m_controls.getClimbRightOnly());
-            }));
+            }, 
+            m_climber));
 
     m_controls
         .climbUp()
@@ -50,7 +67,7 @@ public class RobotContainer {
                 () -> m_climber.setPower(1, 1), () -> m_climber.setPower(0, 0), m_climber));
 
     m_controls
-        .climbUp()
+        .climbDown()
         .whileTrue(
             new StartEndCommand(
                 () -> m_climber.setPower(-1, -1), () -> m_climber.setPower(0, 0), m_climber));
@@ -71,7 +88,7 @@ public class RobotContainer {
       default:
       DriverStation.reportWarning(mode.toString() + "2", false);
         return new Climber(
-            new ClimberIONeo(Ports.ClimberPorts.leftClimberID, Ports.ClimberPorts.rightClimberID));
+            new ClimberIONeo(ClimberPorts.leftClimberID, ClimberPorts.rightClimberID));
     }
   }
 }
