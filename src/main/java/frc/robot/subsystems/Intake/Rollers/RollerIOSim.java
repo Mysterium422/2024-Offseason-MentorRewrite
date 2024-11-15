@@ -4,7 +4,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import frc.lib.g3.FrictionMotorSim;
 import frc.lib.g3.MotorIOInputs;
-import frc.lib.g3.UnitUtil;
 import frc.robot.Constants;
 
 public class RollerIOSim implements RollerIO {

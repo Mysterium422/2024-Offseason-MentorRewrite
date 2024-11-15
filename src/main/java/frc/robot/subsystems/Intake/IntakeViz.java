@@ -18,10 +18,6 @@ public class IntakeViz {
 
     public IntakeViz() {
         viz = new Mechanism2d(30, 20);
-        // viz.getRoot("FirstWheel", 3, 10);//.append(new MechanismLigament2d("FirstWheelCircle", 0, 0, 10, new Color8Bit(Color.kWhite)));
-        // viz.getRoot("SecondWheel", 10, 3);//.append(new MechanismLigament2d("SecondWheelCircle", 0, 0, 10, new Color8Bit(Color.kWhite)));
-        // viz.getRoot("ThirdWheel", 14, 17);//.append(new MechanismLigament2d("ThirdWheelCircle", 0, 0, 10, new Color8Bit(Color.kWhite)));
-
         viz.getRoot("RampStart", 14, 6).append(new MechanismLigament2d("RampLine", 10, 20, 4, new Color8Bit(Color.kWhite)));
         
         firstWheelPosition = viz.getRoot("FirstWheel", 3, 8).append(new MechanismLigament2d("FirstWheelPosition", 2, 0, 7, new Color8Bit(Color.kWhite)));
