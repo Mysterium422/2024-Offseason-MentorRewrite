@@ -49,6 +49,7 @@ public class FrictionMotorSim {
     }
 
     public void setVoltage(Voltage input) {
+        // System.out.println(input);
         inputVoltage = input;
     }
 

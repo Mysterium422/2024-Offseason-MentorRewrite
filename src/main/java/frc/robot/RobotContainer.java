@@ -15,23 +15,37 @@ import frc.robot.Constants.Mode;
 import frc.robot.oi.Controls;
 import frc.robot.oi.OneDriverControlsImpl;
 import frc.robot.oi.TwoDriverControlsImpl;
+import frc.robot.sensors.BeamBreak.BeamBreak;
+import frc.robot.sensors.BeamBreak.BeamBreakIO.BeamBreakIO;
+import frc.robot.sensors.BeamBreak.BeamBreakIO.BeamBreakIODIO;
+import frc.robot.sensors.BeamBreak.BeamBreakIO.BeamBreakIOSim;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Climber.ClimberConstants;
 import frc.robot.subsystems.Climber.ClimberIO.ClimberIO;
 import frc.robot.subsystems.Climber.ClimberIO.ClimberIONeo;
 import frc.robot.subsystems.Climber.ClimberIO.ClimberIOSim;
+import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Intake.Intake.IntakeState;
+import frc.robot.subsystems.Intake.IntakeConstants;
+import frc.robot.subsystems.Intake.Rollers.RollerIO;
+import frc.robot.subsystems.Intake.Rollers.RollerIONeo550;
+import frc.robot.subsystems.Intake.Rollers.RollerIOSim;
 
 public class RobotContainer {
-  private Controls m_controls = new OneDriverControlsImpl(0);
-  private Climber m_climber;
+  private final Controls m_controls = new OneDriverControlsImpl(0);
+  private final Climber m_climber;
+  private final BeamBreak m_beamBreak;
+  private final Intake m_intake;
 
   public RobotContainer() {
-    refreshControllers();
-    m_climber = buildClimber(Constants.getMode());
+    Mode mode = Constants.getMode();
+    m_climber = buildClimber(mode);
+    m_beamBreak = buildBeamBreak(mode);
+    m_intake = buildIntake(mode, m_beamBreak);
     configureBindings();
   }
 
-  private void refreshControllers() {
+  private Controls refreshControllers() {
     ArrayList<Integer> joysticksConnected = new ArrayList<>();
     for (int i = 0; i < DriverStation.kJoystickPorts; i++) {
       if (DriverStation.isJoystickConnected(i)) {
@@ -40,13 +54,13 @@ public class RobotContainer {
     }
     
     if (joysticksConnected.size() >= 2) {
-      m_controls = new TwoDriverControlsImpl(joysticksConnected.get(0), joysticksConnected.get(1));
+      return new TwoDriverControlsImpl(joysticksConnected.get(0), joysticksConnected.get(1));
     } else if (joysticksConnected.size() == 1) {
       DriverStation.reportWarning("[G3] Only one controller connected. Implementing One Driver Controls. (" + joysticksConnected.get(0) + ")", true);
-      m_controls = new OneDriverControlsImpl(joysticksConnected.get(0));
+      return new OneDriverControlsImpl(joysticksConnected.get(0));
     } else {
       DriverStation.reportWarning("[G3] No controllers detected. Implement default controls.", true);
-      m_controls = new TwoDriverControlsImpl(0, 1);
+      return new TwoDriverControlsImpl(0, 1);
     }
   }
 
@@ -70,6 +84,22 @@ public class RobotContainer {
         .whileTrue(
             new StartEndCommand(
                 () -> m_climber.setPower(-1, -1), () -> m_climber.setPower(0, 0), m_climber));
+
+    m_controls
+        .intake()
+        .whileTrue(
+            new StartEndCommand(
+                () -> {
+                  if (!m_beamBreak.isBroken()) {
+                    m_intake.setState(IntakeState.INTAKING);
+                  }
+                },
+                () -> {
+                  if (m_intake.getState() != IntakeState.NOTE_HELD) {
+                    m_intake.setState(IntakeState.IDLE);
+                  }
+                },
+                m_intake));
   }
 
   public Command getAutonomousCommand() {
@@ -77,16 +107,33 @@ public class RobotContainer {
   }
 
   private Climber buildClimber(Mode mode) {
-    DriverStation.reportWarning(mode.toString(), false);
-    switch (mode) {
-      case SIM:
-        DriverStation.reportWarning(mode.toString(), false);
-        return new Climber(new ClimberIOSim());
-      case REPLAY:
-        return new Climber(new ClimberIO() {});
-      default:
-      DriverStation.reportWarning(mode.toString() + "2", false);
-        return new Climber(new ClimberIONeo(ClimberConstants.portLeftClimberID, ClimberConstants.portRightClimberID));
-    }
+    return switch(mode) {
+      case SIM -> new Climber(new ClimberIOSim());
+      case REPLAY -> new Climber(new ClimberIO() {});
+      default -> new Climber(new ClimberIONeo(ClimberConstants.portLeftClimberID, ClimberConstants.portRightClimberID));
+    };
   }
+
+  private BeamBreak buildBeamBreak(Mode mode) {
+    return switch (mode) {
+      case SIM -> new BeamBreak(new BeamBreakIOSim());
+      case REPLAY -> new BeamBreak(new BeamBreakIO() {});
+      default -> new BeamBreak(new BeamBreakIODIO(IntakeConstants.portBeamBreakID));
+    };
+  }
+
+  private Intake buildIntake(Mode mode, BeamBreak beamBreak) {
+    return switch (mode) {
+      case SIM -> new Intake(new RollerIOSim(), beamBreak);
+      case REPLAY -> new Intake(new RollerIO() {}, beamBreak);
+      default -> new Intake(new RollerIONeo550(IntakeConstants.portExternalMotorID, IntakeConstants.portInternalMotorID), beamBreak);
+    };
+  }
+
+  // private Intake buildIntake(Mode mode) {
+  //   switch (mode) {
+  //     case SIM:
+  //       return new Intake
+  //   }
+  // }
 }

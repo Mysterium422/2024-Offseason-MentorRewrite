@@ -16,12 +16,13 @@ import frc.robot.Constants.Mode;
 public class BatterySimManager extends VirtualSubsystem {
 
     private static final ArrayList<Current> currents = new ArrayList<>();
+    private static BatterySimManager instance;
 
     private BatterySimManager() {}
 
     static {
         if (Constants.getMode().equals(Mode.SIM)) {
-            new BatterySimManager();
+            instance = new BatterySimManager();
         }
     }
 

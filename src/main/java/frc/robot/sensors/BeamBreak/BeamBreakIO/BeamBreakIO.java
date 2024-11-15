@@ -8,5 +8,5 @@ public interface BeamBreakIO {
     public boolean isBroken = false;
   }
 
-  public void updateInputs(BeamBreakIOInputs inputs);
+  public default void updateInputs(BeamBreakIOInputs inputs) {}
 }

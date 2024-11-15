@@ -12,7 +12,7 @@ public interface RollerIO {
         public Angle internalPosition;
     }
   
-    public void setPower(double power);
+    public default void setPower(double power) {};
   
-    public void updateInputs(RollerIOInputs inputs, MotorIOInputs external, MotorIOInputs internal);
+    public default void updateInputs(RollerIOInputs inputs, MotorIOInputs external, MotorIOInputs internal) {};
   }

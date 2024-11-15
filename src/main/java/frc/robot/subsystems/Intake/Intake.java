@@ -7,12 +7,15 @@ import frc.lib.g3.MotorIOInputsAutoLogged;
 import frc.robot.sensors.BeamBreak.BeamBreak;
 import frc.robot.subsystems.Intake.Rollers.RollerIO;
 import frc.robot.subsystems.Intake.Rollers.RollerIOInputsAutoLogged;
+import lombok.Getter;
+import lombok.extern.java.Log;
 
 public class Intake extends SubsystemBase {
-    private RollerIO rollerIO;
-    private RollerIOInputsAutoLogged rollerIOInputs = new RollerIOInputsAutoLogged();
-    private MotorIOInputsAutoLogged externalIOInputs = new MotorIOInputsAutoLogged();
-    private MotorIOInputsAutoLogged internalIOInputs = new MotorIOInputsAutoLogged();
+    private final RollerIO rollerIO;
+    private final RollerIOInputsAutoLogged rollerIOInputs = new RollerIOInputsAutoLogged();
+    private final MotorIOInputsAutoLogged externalIOInputs = new MotorIOInputsAutoLogged();
+    private final MotorIOInputsAutoLogged internalIOInputs = new MotorIOInputsAutoLogged();
+    private final IntakeViz viz = new IntakeViz();
 
     private BeamBreak beamBreak;
 
@@ -25,7 +28,7 @@ public class Intake extends SubsystemBase {
         SHOOTING
     }
 
-    private IntakeState currentState = IntakeState.IDLE;
+    @Getter private IntakeState state = IntakeState.IDLE;
 
     public Intake(RollerIO rollerIO, BeamBreak beamBreak) {
         super("Intake");
@@ -34,7 +37,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void setState(IntakeState newState) {
-        currentState = newState;
+        state = newState;
     }
 
     @Override
@@ -46,10 +49,11 @@ public class Intake extends SubsystemBase {
 
         double desiredPower;
 
-        switch(currentState) {
+        switch(state) {
             case INTAKING:
                 desiredPower = 1;
                 if (beamBreak.isBroken()) {
+                    desiredPower = 0;
                     setState(IntakeState.NOTE_HELD);
                 }
                 break;
@@ -71,7 +75,10 @@ public class Intake extends SubsystemBase {
 
         rollerIO.setPower(desiredPower);
 
-        Logger.recordOutput(getName() + "/state", currentState);
+        Logger.recordOutput(getName() + "/state", state);
+        Logger.recordOutput(getName() + "/desiredPower", desiredPower);
+        viz.updateViz(rollerIOInputs);
+        Logger.recordOutput(getName() + "/viz", viz.getViz());
     }
 
     
