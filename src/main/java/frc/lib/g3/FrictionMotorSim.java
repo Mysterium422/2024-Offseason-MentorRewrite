@@ -1,6 +1,5 @@
 package frc.lib.g3;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -11,12 +10,11 @@ import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Torque;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import frc.robot.utils.BatterySimManager;
 import lombok.Getter;
 
 public class FrictionMotorSim {
-    private final DCMotor motor;
+    private final UnitDCMotor motor;
     @Getter private AngularVelocity velocity; // Current velocity (rad/s)
     @Getter private Angle position; // Current position (rad)
 
@@ -35,7 +33,7 @@ public class FrictionMotorSim {
     }
 
     public FrictionMotorSim(DCMotor motor, MomentOfInertia moi, double frictionStatic, double frictionDynamic, boolean brakeMode) {
-        this.motor = motor;
+        this.motor = UnitDCMotor.unitize(motor);
         this.moi = moi;
         this.frictionStatic = frictionStatic;
         this.frictionDynamic = frictionDynamic;
@@ -45,7 +43,7 @@ public class FrictionMotorSim {
     }
 
     public void set(double appliedInput) {
-        setVoltage(Units.Volts.of(appliedInput * RoboRioSim.getVInVoltage()));
+        setVoltage(BatterySimManager.getBatteryVoltage().times(appliedInput));
     }
 
     public void setVoltage(Voltage input) {
@@ -54,16 +52,16 @@ public class FrictionMotorSim {
 
     public void update(Time dt) {
         // Simmed Battery Voltage
-        Voltage batteryVoltage = BatterySimManager.getInstance().getBatteryVoltage();
+        Voltage batteryVoltage = BatterySimManager.getBatteryVoltage();
 
         // Get Clamped Input Voltage (Signed)
         outputVoltage = UnitUtil.clamp(inputVoltage, batteryVoltage.unaryMinus(), batteryVoltage);
         // Calculate Motor Current (Signed)
-        current = Units.Amps.of(motor.getCurrent(velocity.in(Units.RadiansPerSecond), outputVoltage.in(Units.Volts)));
-        BatterySimManager.getInstance().addCurrent(UnitUtil.abs(current));
+        current = motor.getCurrent(velocity, outputVoltage);
+        BatterySimManager.addCurrent(UnitUtil.abs(current));
 
         // Calculate Motor Torque (Signed)
-        Torque motorTorque = Units.NewtonMeters.of(motor.getTorque(current.in(Units.Amps)));
+        Torque motorTorque = motor.getTorque(current);
 
         // Calculate Friction Torque (Signed)
         Torque frictionTorque = calculateFrictionTorque(motorTorque);
@@ -76,6 +74,9 @@ public class FrictionMotorSim {
     private Torque calculateFrictionTorque(Torque motorTorque) {
         if (Math.abs(velocity.in(Units.RadiansPerSecond)) < 1e-1) {
             velocity = Units.RadiansPerSecond.of(0);
+            Torque staticFrictionTorque = Units.NewtonMeters.of(frictionStatic);
+            if (UnitUtil.abs(motorTorque).lte(UnitUtil.abs(staticFrictionTorque))) return motorTorque;
+            return staticFrictionTorque;
         }
 
         if (Math.abs(velocity.in(Units.RadiansPerSecond)) < 3) {
@@ -96,9 +97,9 @@ public class FrictionMotorSim {
     }
     
     public void updateInputs(MotorIOInputs inputs) {
-        inputs.currentAmps = getCurrent();
+        inputs.currentAmps = UnitUtil.abs(getCurrent());
         inputs.outputVoltage = getOutputVoltage();
-        inputs.output = inputs.outputVoltage.divide(BatterySimManager.getInstance().getBatteryVoltage()).baseUnitMagnitude();
+        inputs.output = inputs.outputVoltage.divide(BatterySimManager.getBatteryVoltage()).baseUnitMagnitude();
         inputs.velocityRPM = getVelocity().in(Units.RPM);
         inputs.isOn = Math.abs(inputs.velocityRPM) > 0.01;
     }

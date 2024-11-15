@@ -10,14 +10,20 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import frc.lib.VirtualSubsystem;
-import lombok.Getter;
+import frc.robot.Constants;
+import frc.robot.Constants.Mode;
 
 public class BatterySimManager extends VirtualSubsystem {
 
-    @Getter private static BatterySimManager instance = new BatterySimManager();
-    private final ArrayList<Current> currents = new ArrayList<>();
+    private static final ArrayList<Current> currents = new ArrayList<>();
 
     private BatterySimManager() {}
+
+    static {
+        if (Constants.getMode().equals(Mode.SIM)) {
+            new BatterySimManager();
+        }
+    }
 
     @Override
     public void periodic() {
@@ -31,11 +37,11 @@ public class BatterySimManager extends VirtualSubsystem {
         currents.clear();
     }
 
-    public void addCurrent(Current current) {
+    public static void addCurrent(Current current) {
         currents.add(current);
     }
 
-    public Voltage getBatteryVoltage() {
+    public static Voltage getBatteryVoltage() {
         return Units.Volts.of(RoboRioSim.getVInVoltage());
     }
 
