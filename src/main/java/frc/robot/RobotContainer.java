@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import java.sql.Driver;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,7 +26,7 @@ public class RobotContainer {
   private Climber m_climber;
 
   public RobotContainer() {
-    // refreshControllers();
+    refreshControllers();
     m_climber = buildClimber(Constants.getMode());
     configureBindings();
   }

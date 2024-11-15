@@ -21,4 +21,8 @@ public class UnitUtil {
     public static <U extends Unit, M extends Measure<U>> M abs(M a) {
         return (M) a.baseUnit().of(Math.abs(a.baseUnitMagnitude()));
     }
+
+    public static Angle reduceAngle(Angle angle) {
+        return Units.Degrees.of(angle.in(Units.Degrees) % 360);
+    }
 }

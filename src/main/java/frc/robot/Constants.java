@@ -73,7 +73,7 @@ public final class Constants {
   }
 
   public static final class MotorConstants {
-    public static int CURRENT_LIMIT_550 = 35;
+    public static Current CURRENT_LIMIT_550 = Units.Amps.of(35);
     public static Current CURRENT_LIMIT_1650 = Units.Amps.of(60);
   }
 

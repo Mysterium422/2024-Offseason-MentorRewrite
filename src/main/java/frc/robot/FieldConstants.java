@@ -47,6 +47,7 @@ public class FieldConstants {
   public static final double kFieldWidth = 8.21;
 
   public static final double aprilTagWidth = Units.inchesToMeters(6.5);
+  @SuppressWarnings("removal")
   public static final AprilTagFieldLayout field =
       AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 

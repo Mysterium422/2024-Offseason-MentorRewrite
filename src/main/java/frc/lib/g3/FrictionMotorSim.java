@@ -27,6 +27,8 @@ public class FrictionMotorSim {
     @Getter private Voltage outputVoltage = Units.Volts.of(0);
     @Getter private Current current = Units.Amps.of(0);
 
+    private boolean inverted = false;
+
 
     public FrictionMotorSim(DCMotor motor, MomentOfInertia moi, boolean brakeMode) {
         this(motor, moi, motor.stallTorqueNewtonMeters * 0.02, 0.001, brakeMode);
@@ -102,5 +104,10 @@ public class FrictionMotorSim {
         inputs.output = inputs.outputVoltage.divide(BatterySimManager.getBatteryVoltage()).baseUnitMagnitude();
         inputs.velocityRPM = getVelocity().in(Units.RPM);
         inputs.isOn = Math.abs(inputs.velocityRPM) > 0.01;
+    }
+
+    public FrictionMotorSim inverted(boolean inverted) {
+        this.inverted = inverted;
+        return this;
     }
 }

@@ -8,7 +8,7 @@ public class SparkMaxIO extends SparkMax {
     super(deviceId, type);
   }
 
-  public void updateInputs(MotorIOInputsAutoLogged inputs) {
+  public void updateInputs(MotorIOInputs inputs) {
     inputs.output = getAppliedOutput();
     inputs.outputVoltage = Units.Volts.of(getBusVoltage() * inputs.output);
     inputs.currentAmps = Units.Amps.of(getOutputCurrent());
