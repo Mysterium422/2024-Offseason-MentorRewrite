@@ -28,6 +28,7 @@ public class FrictionMotorSim {
     @Getter private Current current = Units.Amps.of(0);
 
     private boolean inverted = false;
+    private Current limit;
 
 
     public FrictionMotorSim(DCMotor motor, MomentOfInertia moi, boolean brakeMode) {
@@ -49,7 +50,9 @@ public class FrictionMotorSim {
     }
 
     public void setVoltage(Voltage input) {
-        // System.out.println(input);
+        if (inverted) {
+            input = input.unaryMinus();
+        }
         inputVoltage = input;
     }
 
@@ -61,6 +64,11 @@ public class FrictionMotorSim {
         outputVoltage = UnitUtil.clamp(inputVoltage, batteryVoltage.unaryMinus(), batteryVoltage);
         // Calculate Motor Current (Signed)
         current = motor.getCurrent(velocity, outputVoltage);
+        if (limit != null) {
+            current = UnitUtil.clamp(current, limit.unaryMinus(), limit);
+            outputVoltage = getSmartVoltage(velocity, current);
+        }
+        
         BatterySimManager.addCurrent(UnitUtil.abs(current));
 
         // Calculate Motor Torque (Signed)
@@ -99,6 +107,10 @@ public class FrictionMotorSim {
         return Units.NewtonMeters.of(frictionDynamic * velocity.in(Units.RadiansPerSecond));
     }
     
+    private Voltage getSmartVoltage(AngularVelocity speed, Current smartCurrent) {
+        return Units.Volts.of(smartCurrent.in(Units.Amps) * motor.rOhms + speed.in(Units.RadiansPerSecond) / motor.KvRadPerSecPerVolt);
+    }
+    
     public void updateInputs(MotorIOInputs inputs) {
         inputs.currentAmps = UnitUtil.abs(getCurrent());
         inputs.outputVoltage = getOutputVoltage();
@@ -109,6 +121,11 @@ public class FrictionMotorSim {
 
     public FrictionMotorSim inverted(boolean inverted) {
         this.inverted = inverted;
+        return this;
+    }
+
+    public FrictionMotorSim smartCurrentLimit(Current limit) {
+        this.limit = limit;
         return this;
     }
 }

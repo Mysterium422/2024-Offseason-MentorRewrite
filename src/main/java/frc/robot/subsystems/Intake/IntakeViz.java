@@ -26,9 +26,9 @@ public class IntakeViz {
     }
 
     public void updateViz(RollerIOInputs inputs) {
-        firstWheelPosition.setAngle(UnitUtil.reduceAngle(inputs.externalPosition.divide(20)).in(Units.Degrees));
-        secondWheelPosition.setAngle(-UnitUtil.reduceAngle(inputs.externalPosition.divide(20)).in(Units.Degrees));
-        thirdWheelPosition.setAngle(UnitUtil.reduceAngle(inputs.externalPosition.divide(20)).in(Units.Degrees));
+        firstWheelPosition.setAngle(-UnitUtil.reduceAngle(inputs.externalPosition.divide(16)).in(Units.Degrees));
+        secondWheelPosition.setAngle(UnitUtil.reduceAngle(inputs.externalPosition.divide(16)).in(Units.Degrees));
+        thirdWheelPosition.setAngle(UnitUtil.reduceAngle(inputs.externalPosition.divide(16)).in(Units.Degrees));
     }
     
 }

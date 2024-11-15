@@ -6,6 +6,7 @@ import frc.lib.g3.FrictionMotorSim;
 import frc.lib.g3.MotorIOInputsAutoLogged;
 import frc.lib.g3.UnitUtil;
 import frc.robot.Constants;
+import frc.robot.Constants.MotorConstants;
 import frc.robot.subsystems.Climber.ClimberConstants;
 
 public class ClimberIOSim implements ClimberIO {
@@ -16,6 +17,9 @@ public class ClimberIOSim implements ClimberIO {
   public void setPower(double leftPower, double rightPower) {
     leftMotorSim.set(leftPower);
     rightMotorSim.set(rightPower);
+
+    leftMotorSim.smartCurrentLimit(MotorConstants.CURRENT_LIMIT_1650);
+    rightMotorSim.smartCurrentLimit(MotorConstants.CURRENT_LIMIT_1650);
   }
 
   @Override
