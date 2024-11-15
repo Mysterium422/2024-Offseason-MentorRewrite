@@ -6,7 +6,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import frc.lib.LimelightHelpers.LimelightTarget_Fiducial;
 
-public class LimelightIOFiducials extends LimelightIO {
+public class LimelightIOFiducials extends LimelightIO<LimelightTarget_Fiducial> {
   public LimelightIOFiducials(String name) {
     super(name);
   }

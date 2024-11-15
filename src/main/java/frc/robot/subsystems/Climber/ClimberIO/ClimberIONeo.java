@@ -4,8 +4,12 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
+
+import edu.wpi.first.units.Units;
 import frc.lib.g3.MotorIOInputsAutoLogged;
 import frc.lib.g3.SparkMaxIO;
+import frc.lib.g3.UnitUtil;
+import frc.robot.subsystems.Climber.ClimberConstants;
 
 public class ClimberIONeo implements ClimberIO {
   private final SparkMaxIO leftClimber;
@@ -30,10 +34,9 @@ public class ClimberIONeo implements ClimberIO {
     rightClimber.set(rightPower);
   }
 
-  public void updateInputs(
-      ClimberIOInputs inputs, MotorIOInputsAutoLogged left, MotorIOInputsAutoLogged right) {
-    inputs.leftPosition = leftClimber.getEncoder().getPosition();
-    inputs.rightPosition = rightClimber.getEncoder().getPosition();
+  public void updateInputs(ClimberIOInputs inputs, MotorIOInputsAutoLogged left, MotorIOInputsAutoLogged right) {
+    inputs.leftPosition = UnitUtil.angleToDistance(Units.Rotations.of(leftClimber.getEncoder().getPosition()), ClimberConstants.pulleyRadius).divide(ClimberConstants.gearing);
+    inputs.rightPosition = UnitUtil.angleToDistance(Units.Rotations.of(rightClimber.getEncoder().getPosition()), ClimberConstants.pulleyRadius).divide(ClimberConstants.gearing);
     leftClimber.updateInputs(left);
     rightClimber.updateInputs(right);
   }

@@ -7,6 +7,7 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.lib.LoggedTunableNumber;
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
@@ -37,6 +38,8 @@ public final class Constants {
 
   public static final boolean tuningMode = true;
   public static final boolean enableReplay = false;
+
+  public static final Time loopTime = Units.Milliseconds.of(20);
 
   public static final class AutonConstants {
     public static LoggedDashboardNumber AUTON_SHOOT_SUBWOOFER_LENGTH_SEC =

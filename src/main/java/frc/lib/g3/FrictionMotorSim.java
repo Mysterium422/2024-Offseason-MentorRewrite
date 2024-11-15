@@ -1,7 +1,5 @@
 package frc.lib.g3;
 
-import java.sql.Driver;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
@@ -13,7 +11,6 @@ import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Torque;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import frc.robot.utils.BatterySimManager;
 import lombok.Getter;
@@ -24,28 +21,31 @@ public class FrictionMotorSim {
     @Getter private Angle position; // Current position (rad)
 
     private final MomentOfInertia moi;
-    private final double gearing;
     private final double frictionStatic; // Static friction torque (Nm)
     private final double frictionDynamic; // Dynamic friction coefficient (Nm/(rad/s))
-    private final boolean brakeMode = true;
+    private final boolean brakeMode;
 
     @Getter private Voltage inputVoltage = Units.Volts.of(0);
     @Getter private Voltage outputVoltage = Units.Volts.of(0);
     @Getter private Current current = Units.Amps.of(0);
 
 
-    public FrictionMotorSim(DCMotor motor, MomentOfInertia moi, double gearing) {
-        this(motor, moi, gearing, motor.stallTorqueNewtonMeters * 0.02, 0.001);
+    public FrictionMotorSim(DCMotor motor, MomentOfInertia moi, boolean brakeMode) {
+        this(motor, moi, motor.stallTorqueNewtonMeters * 0.02, 0.001, brakeMode);
     }
 
-    public FrictionMotorSim(DCMotor motor, MomentOfInertia moi, double gearing, double frictionStatic, double frictionDynamic) {
+    public FrictionMotorSim(DCMotor motor, MomentOfInertia moi, double frictionStatic, double frictionDynamic, boolean brakeMode) {
         this.motor = motor;
-        this.moi = moi.times(gearing * gearing);
-        this.gearing = gearing;
+        this.moi = moi;
         this.frictionStatic = frictionStatic;
         this.frictionDynamic = frictionDynamic;
         this.velocity = Units.RadiansPerSecond.of(0);
         this.position = Units.Radians.of(0);
+        this.brakeMode = brakeMode;
+    }
+
+    public void set(double appliedInput) {
+        setVoltage(Units.Volts.of(appliedInput * RoboRioSim.getVInVoltage()));
     }
 
     public void setVoltage(Voltage input) {
@@ -53,14 +53,22 @@ public class FrictionMotorSim {
     }
 
     public void update(Time dt) {
-        outputVoltage = Units.Volts.of(MathUtil.clamp(inputVoltage.in(Units.Volts), -RoboRioSim.getVInVoltage(), RoboRioSim.getVInVoltage()));
-        current = Units.Amps.of(motor.getCurrent(velocity.in(Units.RadiansPerSecond), outputVoltage.in(Units.Volts)));
-        BatterySimManager.getInstance().addCurrent(current);
+        // Simmed Battery Voltage
+        Voltage batteryVoltage = BatterySimManager.getInstance().getBatteryVoltage();
 
+        // Get Clamped Input Voltage (Signed)
+        outputVoltage = UnitUtil.clamp(inputVoltage, batteryVoltage.unaryMinus(), batteryVoltage);
+        // Calculate Motor Current (Signed)
+        current = Units.Amps.of(motor.getCurrent(velocity.in(Units.RadiansPerSecond), outputVoltage.in(Units.Volts)));
+        BatterySimManager.getInstance().addCurrent(UnitUtil.abs(current));
+
+        // Calculate Motor Torque (Signed)
         Torque motorTorque = Units.NewtonMeters.of(motor.getTorque(current.in(Units.Amps)));
+
+        // Calculate Friction Torque (Signed)
         Torque frictionTorque = calculateFrictionTorque(motorTorque);
         Torque netTorque = motorTorque.minus(frictionTorque);
-        AngularAcceleration acceleration = Units.RadiansPerSecondPerSecond.of(netTorque.in(Units.NewtonMeters) * gearing / moi.in(Units.KilogramSquareMeters));
+        AngularAcceleration acceleration = Units.RadiansPerSecondPerSecond.of(netTorque.in(Units.NewtonMeters) / moi.in(Units.KilogramSquareMeters));
         velocity = velocity.plus(acceleration.times(dt));
         position = position.plus(velocity.times(dt));
     }
@@ -72,18 +80,26 @@ public class FrictionMotorSim {
 
         if (Math.abs(velocity.in(Units.RadiansPerSecond)) < 3) {
             if (brakeMode) {
-                return Units.NewtonMeters.of(frictionDynamic * 10 * gearing * velocity.in(Units.RadiansPerSecond));
+                return Units.NewtonMeters.of(frictionDynamic * 10 * velocity.in(Units.RadiansPerSecond));
             }
-            return Units.NewtonMeters.of(frictionDynamic * velocity.in(Units.RadiansPerSecond));
+            return Units.NewtonMeters.of(frictionDynamic * 3 * velocity.in(Units.RadiansPerSecond));
         }
 
         if (Math.abs(inputVoltage.in(Units.Volts)) < 1e-4) {
             if (brakeMode) {
-                return Units.NewtonMeters.of(frictionDynamic * 10 * gearing * velocity.in(Units.RadiansPerSecond));
+                return Units.NewtonMeters.of(frictionDynamic * 10 * velocity.in(Units.RadiansPerSecond));
             }
             return Units.NewtonMeters.of(frictionDynamic * 3 * velocity.in(Units.RadiansPerSecond));    
         }
 
         return Units.NewtonMeters.of(frictionDynamic * velocity.in(Units.RadiansPerSecond));
+    }
+    
+    public void updateInputs(MotorIOInputs inputs) {
+        inputs.currentAmps = getCurrent();
+        inputs.outputVoltage = getOutputVoltage();
+        inputs.output = inputs.outputVoltage.divide(BatterySimManager.getInstance().getBatteryVoltage()).baseUnitMagnitude();
+        inputs.velocityRPM = getVelocity().in(Units.RPM);
+        inputs.isOn = Math.abs(inputs.velocityRPM) > 0.01;
     }
 }

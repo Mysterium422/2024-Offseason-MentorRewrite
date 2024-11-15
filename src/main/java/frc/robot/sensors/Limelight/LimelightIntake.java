@@ -19,7 +19,7 @@ public class LimelightIntake extends VirtualSubsystem {
 
   @Override
   public void periodic() {
-    double tx = limelightIO.getTarget().tx;
+    double tx = limelightIO.getFirstTarget().tx;
     if (tx != 0) {
       lastKnownTx = tx;
       lastKnownTxTime = Timer.getFPGATimestamp();

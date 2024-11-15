@@ -20,11 +20,6 @@ public final class Ports {
     public static final int beamBreak = 6;
   }
 
-  public static final class ClimberPorts {
-    public static final int leftClimberID = 50;
-    public static final int rightClimberID = 51;
-  }
-
   public static final class NeoDrive {
     public static final int FRONT_RIGHT_DRIVING = 13;
     public static final int FRONT_RIGHT_TURNING = 14;

@@ -13,11 +13,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.Constants.Mode;
-import frc.robot.Ports.ClimberPorts;
 import frc.robot.oi.Controls;
 import frc.robot.oi.OneDriverControlsImpl;
 import frc.robot.oi.TwoDriverControlsImpl;
 import frc.robot.subsystems.Climber.Climber;
+import frc.robot.subsystems.Climber.ClimberConstants;
 import frc.robot.subsystems.Climber.ClimberIO.ClimberIO;
 import frc.robot.subsystems.Climber.ClimberIO.ClimberIONeo;
 import frc.robot.subsystems.Climber.ClimberIO.ClimberIOSim;
@@ -87,8 +87,7 @@ public class RobotContainer {
         return new Climber(new ClimberIO() {});
       default:
       DriverStation.reportWarning(mode.toString() + "2", false);
-        return new Climber(
-            new ClimberIONeo(ClimberPorts.leftClimberID, ClimberPorts.rightClimberID));
+        return new Climber(new ClimberIONeo(ClimberConstants.portLeftClimberID, ClimberConstants.portRightClimberID));
     }
   }
 }

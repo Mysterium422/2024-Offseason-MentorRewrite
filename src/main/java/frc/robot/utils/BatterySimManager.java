@@ -6,6 +6,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import frc.lib.VirtualSubsystem;
@@ -32,6 +33,10 @@ public class BatterySimManager extends VirtualSubsystem {
 
     public void addCurrent(Current current) {
         currents.add(current);
+    }
+
+    public Voltage getBatteryVoltage() {
+        return Units.Volts.of(RoboRioSim.getVInVoltage());
     }
 
 
