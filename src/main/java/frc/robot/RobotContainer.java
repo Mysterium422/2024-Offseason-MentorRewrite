@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -30,6 +28,7 @@ import frc.robot.subsystems.Intake.IntakeConstants;
 import frc.robot.subsystems.Intake.Rollers.RollerIO;
 import frc.robot.subsystems.Intake.Rollers.RollerIONeo550;
 import frc.robot.subsystems.Intake.Rollers.RollerIOSim;
+import java.util.ArrayList;
 
 public class RobotContainer {
   private final Controls m_controls = new OneDriverControlsImpl(0);
@@ -52,14 +51,19 @@ public class RobotContainer {
         joysticksConnected.add(i);
       }
     }
-    
+
     if (joysticksConnected.size() >= 2) {
       return new TwoDriverControlsImpl(joysticksConnected.get(0), joysticksConnected.get(1));
     } else if (joysticksConnected.size() == 1) {
-      DriverStation.reportWarning("[G3] Only one controller connected. Implementing One Driver Controls. (" + joysticksConnected.get(0) + ")", true);
+      DriverStation.reportWarning(
+          "[G3] Only one controller connected. Implementing One Driver Controls. ("
+              + joysticksConnected.get(0)
+              + ")",
+          true);
       return new OneDriverControlsImpl(joysticksConnected.get(0));
     } else {
-      DriverStation.reportWarning("[G3] No controllers detected. Implement default controls.", true);
+      DriverStation.reportWarning(
+          "[G3] No controllers detected. Implement default controls.", true);
       return new TwoDriverControlsImpl(0, 1);
     }
   }
@@ -70,7 +74,7 @@ public class RobotContainer {
         new RunCommand(
             () -> {
               m_climber.setPower(m_controls.getClimbLeftOnly(), m_controls.getClimbRightOnly());
-            }, 
+            },
             m_climber));
 
     m_controls
@@ -107,10 +111,12 @@ public class RobotContainer {
   }
 
   private Climber buildClimber(Mode mode) {
-    return switch(mode) {
+    return switch (mode) {
       case SIM -> new Climber(new ClimberIOSim());
       case REPLAY -> new Climber(new ClimberIO() {});
-      default -> new Climber(new ClimberIONeo(ClimberConstants.portLeftClimberID, ClimberConstants.portRightClimberID));
+      default -> new Climber(
+          new ClimberIONeo(
+              ClimberConstants.portLeftClimberID, ClimberConstants.portRightClimberID));
     };
   }
 
@@ -126,7 +132,10 @@ public class RobotContainer {
     return switch (mode) {
       case SIM -> new Intake(new RollerIOSim(), beamBreak);
       case REPLAY -> new Intake(new RollerIO() {}, beamBreak);
-      default -> new Intake(new RollerIONeo550(IntakeConstants.portExternalMotorID, IntakeConstants.portInternalMotorID), beamBreak);
+      default -> new Intake(
+          new RollerIONeo550(
+              IntakeConstants.portExternalMotorID, IntakeConstants.portInternalMotorID),
+          beamBreak);
     };
   }
 

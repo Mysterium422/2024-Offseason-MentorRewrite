@@ -1,0 +1,22 @@
+{
+    "fileName": "SpotlightLib.json",
+    "name": "SpotlightLib",
+    "version": "0.0.1",
+    "frcYear": "2025",
+    "uuid": "859fc0f7-170a-460d-b7c1-06e5a0f8dffc",
+    "mavenUrls": [
+        "file:///Users/ankitagrawal/Desktop/Coding-Development/Robotics2025/Spotlight/build/maven-repo"
+    ],
+    "jsonUrl": "",
+    "javaDependencies": [
+        {
+            "groupId": "com.g3robotics.spotlight",
+            "artifactId": "SpotlightLib-java",
+            "version": "0.0.1"
+        }
+    ],
+    "jniDependencies": [
+    ],
+    "cppDependencies": [
+    ]
+}

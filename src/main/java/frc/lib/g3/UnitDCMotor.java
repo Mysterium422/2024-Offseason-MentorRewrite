@@ -8,20 +8,32 @@ import edu.wpi.first.units.measure.Torque;
 import edu.wpi.first.units.measure.Voltage;
 
 public class UnitDCMotor extends DCMotor {
-    public UnitDCMotor(
-        double nominalVoltageVolts,
-        double stallTorqueNewtonMeters,
-        double stallCurrentAmps,
-        double freeCurrentAmps,
-        double freeSpeedRadPerSec,
-        int numMotors) {
-            super(nominalVoltageVolts, stallTorqueNewtonMeters, stallCurrentAmps, freeCurrentAmps, freeSpeedRadPerSec, numMotors);
-    }
+  public UnitDCMotor(
+      double nominalVoltageVolts,
+      double stallTorqueNewtonMeters,
+      double stallCurrentAmps,
+      double freeCurrentAmps,
+      double freeSpeedRadPerSec,
+      int numMotors) {
+    super(
+        nominalVoltageVolts,
+        stallTorqueNewtonMeters,
+        stallCurrentAmps,
+        freeCurrentAmps,
+        freeSpeedRadPerSec,
+        numMotors);
+  }
 
-    public static UnitDCMotor unitize(DCMotor motor) {
-        // Can do 1 since multiplier has already been applied
-        return new UnitDCMotor(motor.nominalVoltageVolts, motor.stallTorqueNewtonMeters, motor.stallCurrentAmps, motor.freeCurrentAmps, motor.freeSpeedRadPerSec, 1);
-    }
+  public static UnitDCMotor unitize(DCMotor motor) {
+    // Can do 1 since multiplier has already been applied
+    return new UnitDCMotor(
+        motor.nominalVoltageVolts,
+        motor.stallTorqueNewtonMeters,
+        motor.stallCurrentAmps,
+        motor.freeCurrentAmps,
+        motor.freeSpeedRadPerSec,
+        1);
+  }
 
   /**
    * Calculate current drawn by motor with given speed and input voltage.
@@ -62,7 +74,8 @@ public class UnitDCMotor extends DCMotor {
    * @return The voltage of the motor.
    */
   public Voltage getVoltage(Torque torque, AngularVelocity speed) {
-    return Units.Volts.of(getVoltage(torque.in(Units.NewtonMeters), speed.in(Units.RadiansPerSecond)));
+    return Units.Volts.of(
+        getVoltage(torque.in(Units.NewtonMeters), speed.in(Units.RadiansPerSecond)));
   }
 
   /**
@@ -73,7 +86,8 @@ public class UnitDCMotor extends DCMotor {
    * @return The angular speed of the motor.
    */
   public AngularVelocity getSpeed(Torque torque, Voltage voltage) {
-    return Units.RadiansPerSecond.of(getSpeed(torque.in(Units.NewtonMeters), voltage.in(Units.Volts)));
+    return Units.RadiansPerSecond.of(
+        getSpeed(torque.in(Units.NewtonMeters), voltage.in(Units.Volts)));
   }
 
   /**
@@ -101,7 +115,12 @@ public class UnitDCMotor extends DCMotor {
    */
   public static UnitDCMotor getCIM(int numMotors) {
     return new UnitDCMotor(
-        12, 2.42, 133, 2.7, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(5310), numMotors);
+        12,
+        2.42,
+        133,
+        2.7,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(5310),
+        numMotors);
   }
 
   /**
@@ -112,7 +131,12 @@ public class UnitDCMotor extends DCMotor {
    */
   public static UnitDCMotor getVex775Pro(int numMotors) {
     return new UnitDCMotor(
-        12, 0.71, 134, 0.7, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(18730), numMotors);
+        12,
+        0.71,
+        134,
+        0.7,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(18730),
+        numMotors);
   }
 
   /**
@@ -123,7 +147,12 @@ public class UnitDCMotor extends DCMotor {
    */
   public static UnitDCMotor getNEO(int numMotors) {
     return new UnitDCMotor(
-        12, 2.6, 105, 1.8, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(5676), numMotors);
+        12,
+        2.6,
+        105,
+        1.8,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(5676),
+        numMotors);
   }
 
   /**
@@ -134,7 +163,12 @@ public class UnitDCMotor extends DCMotor {
    */
   public static UnitDCMotor getMiniCIM(int numMotors) {
     return new UnitDCMotor(
-        12, 1.41, 89, 3, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(5840), numMotors);
+        12,
+        1.41,
+        89,
+        3,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(5840),
+        numMotors);
   }
 
   /**
@@ -145,7 +179,12 @@ public class UnitDCMotor extends DCMotor {
    */
   public static UnitDCMotor getBag(int numMotors) {
     return new UnitDCMotor(
-        12, 0.43, 53, 1.8, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(13180), numMotors);
+        12,
+        0.43,
+        53,
+        1.8,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(13180),
+        numMotors);
   }
 
   /**
@@ -156,7 +195,12 @@ public class UnitDCMotor extends DCMotor {
    */
   public static UnitDCMotor getAndymarkRs775_125(int numMotors) {
     return new UnitDCMotor(
-        12, 0.28, 18, 1.6, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(5800.0), numMotors);
+        12,
+        0.28,
+        18,
+        1.6,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(5800.0),
+        numMotors);
   }
 
   /**
@@ -167,7 +211,12 @@ public class UnitDCMotor extends DCMotor {
    */
   public static UnitDCMotor getBanebotsRs775(int numMotors) {
     return new UnitDCMotor(
-        12, 0.72, 97, 2.7, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(13050.0), numMotors);
+        12,
+        0.72,
+        97,
+        2.7,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(13050.0),
+        numMotors);
   }
 
   /**
@@ -178,7 +227,12 @@ public class UnitDCMotor extends DCMotor {
    */
   public static UnitDCMotor getAndymark9015(int numMotors) {
     return new UnitDCMotor(
-        12, 0.36, 71, 3.7, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(14270.0), numMotors);
+        12,
+        0.36,
+        71,
+        3.7,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(14270.0),
+        numMotors);
   }
 
   /**
@@ -189,7 +243,12 @@ public class UnitDCMotor extends DCMotor {
    */
   public static UnitDCMotor getBanebotsRs550(int numMotors) {
     return new UnitDCMotor(
-        12, 0.38, 84, 0.4, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(19000.0), numMotors);
+        12,
+        0.38,
+        84,
+        0.4,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(19000.0),
+        numMotors);
   }
 
   /**
@@ -200,7 +259,12 @@ public class UnitDCMotor extends DCMotor {
    */
   public static UnitDCMotor getNeo550(int numMotors) {
     return new UnitDCMotor(
-        12, 0.97, 100, 1.4, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(11000.0), numMotors);
+        12,
+        0.97,
+        100,
+        1.4,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(11000.0),
+        numMotors);
   }
 
   /**
@@ -211,7 +275,12 @@ public class UnitDCMotor extends DCMotor {
    */
   public static UnitDCMotor getFalcon500(int numMotors) {
     return new UnitDCMotor(
-        12, 4.69, 257, 1.5, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(6380.0), numMotors);
+        12,
+        4.69,
+        257,
+        1.5,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(6380.0),
+        numMotors);
   }
 
   /**
@@ -223,7 +292,12 @@ public class UnitDCMotor extends DCMotor {
   public static UnitDCMotor getFalcon500Foc(int numMotors) {
     // https://store.ctr-electronics.com/falcon-500-powered-by-talon-fx/
     return new UnitDCMotor(
-        12, 5.84, 304, 1.5, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(6080.0), numMotors);
+        12,
+        5.84,
+        304,
+        1.5,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(6080.0),
+        numMotors);
   }
 
   /**
@@ -235,7 +309,12 @@ public class UnitDCMotor extends DCMotor {
   public static UnitDCMotor getRomiBuiltIn(int numMotors) {
     // From https://www.pololu.com/product/1520/specs
     return new UnitDCMotor(
-        4.5, 0.1765, 1.25, 0.13, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(150.0), numMotors);
+        4.5,
+        0.1765,
+        1.25,
+        0.13,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(150.0),
+        numMotors);
   }
 
   /**
@@ -247,7 +326,12 @@ public class UnitDCMotor extends DCMotor {
   public static UnitDCMotor getKrakenX60(int numMotors) {
     // From https://store.ctr-electronics.com/announcing-kraken-x60/
     return new UnitDCMotor(
-        12, 7.09, 366, 2, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(6000), numMotors);
+        12,
+        7.09,
+        366,
+        2,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(6000),
+        numMotors);
   }
 
   /**
@@ -259,7 +343,12 @@ public class UnitDCMotor extends DCMotor {
   public static UnitDCMotor getKrakenX60Foc(int numMotors) {
     // From https://store.ctr-electronics.com/announcing-kraken-x60/
     return new UnitDCMotor(
-        12, 9.37, 483, 2, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(5800), numMotors);
+        12,
+        9.37,
+        483,
+        2,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(5800),
+        numMotors);
   }
 
   /**
@@ -271,6 +360,11 @@ public class UnitDCMotor extends DCMotor {
   public static UnitDCMotor getNeoVortex(int numMotors) {
     // From https://www.revrobotics.com/next-generation-spark-neo/
     return new UnitDCMotor(
-        12, 3.60, 211, 3.6, edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(6784), numMotors);
+        12,
+        3.60,
+        211,
+        3.6,
+        edu.wpi.first.math.util.Units.rotationsPerMinuteToRadiansPerSecond(6784),
+        numMotors);
   }
 }

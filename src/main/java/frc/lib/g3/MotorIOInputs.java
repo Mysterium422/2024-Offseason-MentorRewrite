@@ -1,9 +1,8 @@
 package frc.lib.g3;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
 public class MotorIOInputs {

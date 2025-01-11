@@ -1,9 +1,8 @@
 package frc.robot.subsystems.Climber.ClimberIO;
 
+import edu.wpi.first.units.measure.Distance;
 import frc.lib.g3.MotorIOInputsAutoLogged;
 import org.littletonrobotics.junction.AutoLog;
-
-import edu.wpi.first.units.measure.Distance;
 
 public interface ClimberIO {
 

@@ -4,7 +4,6 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.units.Units;
 import frc.lib.g3.MotorIOInputs;
 import frc.lib.g3.SparkMaxIO;
@@ -26,6 +25,8 @@ public class ClimberIONeo implements ClimberIO {
     leftClimber.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     rightClimber.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
+    leftClimber.getClosedLoopController().s
+
     leftClimber.getEncoder().setPosition(0);
     rightClimber.getEncoder().setPosition(0);
   }
@@ -36,8 +37,16 @@ public class ClimberIONeo implements ClimberIO {
   }
 
   public void updateInputs(ClimberIOInputs inputs, MotorIOInputs left, MotorIOInputs right) {
-    inputs.leftPosition = UnitUtil.angleToDistance(Units.Rotations.of(leftClimber.getEncoder().getPosition()), ClimberConstants.pulleyRadius).divide(ClimberConstants.gearing);
-    inputs.rightPosition = UnitUtil.angleToDistance(Units.Rotations.of(rightClimber.getEncoder().getPosition()), ClimberConstants.pulleyRadius).divide(ClimberConstants.gearing);
+    inputs.leftPosition =
+        UnitUtil.angleToDistance(
+                Units.Rotations.of(leftClimber.getEncoder().getPosition()),
+                ClimberConstants.pulleyRadius)
+            .divide(ClimberConstants.gearing);
+    inputs.rightPosition =
+        UnitUtil.angleToDistance(
+                Units.Rotations.of(rightClimber.getEncoder().getPosition()),
+                ClimberConstants.pulleyRadius)
+            .divide(ClimberConstants.gearing);
     leftClimber.updateInputs(left);
     rightClimber.updateInputs(right);
   }

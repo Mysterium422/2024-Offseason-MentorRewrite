@@ -8,31 +8,33 @@ import frc.robot.Constants;
 import frc.robot.Constants.MotorConstants;
 
 public class RollerIOSim implements RollerIO {
-    private final FrictionMotorSim externalMotorSim = new FrictionMotorSim(DCMotor.getNeo550(1), Units.KilogramSquareMeters.of(0.001), false);
-    private final FrictionMotorSim internalMotorSim = new FrictionMotorSim(DCMotor.getNeo550(1), Units.KilogramSquareMeters.of(0.001), false);
+  private final FrictionMotorSim externalMotorSim =
+      new FrictionMotorSim(DCMotor.getNeo550(1), Units.KilogramSquareMeters.of(0.001), false);
+  private final FrictionMotorSim internalMotorSim =
+      new FrictionMotorSim(DCMotor.getNeo550(1), Units.KilogramSquareMeters.of(0.001), false);
 
-    public RollerIOSim() {
-        externalMotorSim.inverted(true);
+  public RollerIOSim() {
+    externalMotorSim.inverted(true);
 
-        externalMotorSim.smartCurrentLimit(MotorConstants.CURRENT_LIMIT_550);
-        internalMotorSim.smartCurrentLimit(MotorConstants.CURRENT_LIMIT_550);
-    }
+    externalMotorSim.smartCurrentLimit(MotorConstants.CURRENT_LIMIT_550);
+    internalMotorSim.smartCurrentLimit(MotorConstants.CURRENT_LIMIT_550);
+  }
 
-    @Override
-    public void setPower(double power) {
-        externalMotorSim.set(power);
-        internalMotorSim.set(power);
-    }
+  @Override
+  public void setPower(double power) {
+    externalMotorSim.set(power);
+    internalMotorSim.set(power);
+  }
 
-    @Override
-    public void updateInputs(RollerIOInputs inputs, MotorIOInputs internal, MotorIOInputs external) {
-        externalMotorSim.update(Constants.loopTime);
-        internalMotorSim.update(Constants.loopTime);
+  @Override
+  public void updateInputs(RollerIOInputs inputs, MotorIOInputs internal, MotorIOInputs external) {
+    externalMotorSim.update(Constants.loopTime);
+    internalMotorSim.update(Constants.loopTime);
 
-        externalMotorSim.updateInputs(external);
-        internalMotorSim.updateInputs(internal);
+    externalMotorSim.updateInputs(external);
+    internalMotorSim.updateInputs(internal);
 
-        inputs.externalPosition = externalMotorSim.getPosition();
-        inputs.internalPosition = internalMotorSim.getPosition();
-    }
+    inputs.externalPosition = externalMotorSim.getPosition();
+    inputs.internalPosition = internalMotorSim.getPosition();
+  }
 }

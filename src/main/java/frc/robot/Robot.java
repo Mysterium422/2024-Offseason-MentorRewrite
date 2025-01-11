@@ -8,8 +8,8 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.lib.NoteVisualizer;
 import frc.lib.VirtualSubsystem;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -26,7 +26,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-
     if (Robot.isSimulation()) {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
@@ -79,6 +78,9 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    // NoteVisualizer.resetAutoNotes();
+    // NoteVisualizer.showAllNotes();
   }
 
   @Override
@@ -93,6 +95,10 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.cancel();
     }
     // m_robotContainer.refreshControllers();
+    NoteVisualizer.resetAutoNotes();
+    NoteVisualizer.showAllNotes();
+    // NoteVisualizer.clearAutoNotes();
+    // NoteVisualizer.takeAutoNote(0);
   }
 
   @Override

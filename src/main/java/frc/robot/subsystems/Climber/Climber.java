@@ -30,7 +30,8 @@ public class Climber extends SubsystemBase {
   public Climber(ClimberIO climberIO) {
     super("Climber");
     this.climberIO = climberIO;
-    viz.getRoot("Max Height", 0, 1).append(new MechanismLigament2d("MaxHeightLine", 4, 0, 2, new Color8Bit(Color.kBlack)));
+    viz.getRoot("Max Height", 0, 1)
+        .append(new MechanismLigament2d("MaxHeightLine", 4, 0, 2, new Color8Bit(Color.kBlack)));
   }
 
   @Override
